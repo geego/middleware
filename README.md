@@ -1,7 +1,7 @@
-# geen middleware
+# middleware
 
-a high performance, lightweight Go API framework.
+Here you'll find middleware ready to use with `geen` framework, maintained by geego team.
 
 ## License
 
-[MIT License](./LICENSE)
+Inspired by `chi` and under [MIT License](./LICENSE)

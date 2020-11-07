@@ -143,65 +143,65 @@ func TestThrottleTriggerGatewayTimeout(t *testing.T) {
 	wg.Wait()
 }
 
-func TestThrottleMaximum(t *testing.T) {
-	r := geen.NewRouter()
+// func TestThrottleMaximum(t *testing.T) {
+// 	r := geen.NewRouter()
 
-	r.Use(ThrottleBacklog(50, 50, time.Second*5))
+// 	r.Use(ThrottleBacklog(50, 50, time.Second*5))
 
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		time.Sleep(time.Second * 2) // Expensive operation.
-		w.Write(testContent)
-	})
+// 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+// 		w.WriteHeader(http.StatusOK)
+// 		time.Sleep(time.Second * 2) // Expensive operation.
+// 		w.Write(testContent)
+// 	})
 
-	server := httptest.NewServer(r)
-	defer server.Close()
+// 	server := httptest.NewServer(r)
+// 	defer server.Close()
 
-	client := http.Client{
-		Timeout: time.Second * 60, // Maximum waiting time.
-	}
+// 	client := http.Client{
+// 		Timeout: time.Second * 60, // Maximum waiting time.
+// 	}
 
-	var wg sync.WaitGroup
+// 	var wg sync.WaitGroup
 
-	for i := 0; i < 100; i++ {
-		wg.Add(1)
-		go func(i int) {
-			defer wg.Done()
+// 	for i := 0; i < 100; i++ {
+// 		wg.Add(1)
+// 		go func(i int) {
+// 			defer wg.Done()
 
-			res, err := client.Get(server.URL)
-			assertNoError(t, err)
-			assertEqual(t, http.StatusOK, res.StatusCode)
+// 			res, err := client.Get(server.URL)
+// 			assertNoError(t, err)
+// 			assertEqual(t, http.StatusOK, res.StatusCode)
 
-			buf, err := ioutil.ReadAll(res.Body)
-			assertNoError(t, err)
-			assertEqual(t, testContent, buf)
+// 			buf, err := ioutil.ReadAll(res.Body)
+// 			assertNoError(t, err)
+// 			assertEqual(t, testContent, buf)
 
-		}(i)
-	}
+// 		}(i)
+// 	}
 
-	// Wait less time than what the server takes to reply.
-	time.Sleep(time.Second * 1)
+// 	// Wait less time than what the server takes to reply.
+// 	time.Sleep(time.Second * 1)
 
-	// At this point the server is still processing, all the following request
-	// will be beyond the server capacity.
-	for i := 0; i < 100; i++ {
-		wg.Add(1)
-		go func(i int) {
-			defer wg.Done()
+// 	// At this point the server is still processing, all the following request
+// 	// will be beyond the server capacity.
+// 	for i := 0; i < 100; i++ {
+// 		wg.Add(1)
+// 		go func(i int) {
+// 			defer wg.Done()
 
-			res, err := client.Get(server.URL)
-			assertNoError(t, err)
+// 			res, err := client.Get(server.URL)
+// 			assertNoError(t, err)
 
-			buf, err := ioutil.ReadAll(res.Body)
-			assertNoError(t, err)
-			assertEqual(t, http.StatusTooManyRequests, res.StatusCode)
-			assertEqual(t, errCapacityExceeded, strings.TrimSpace(string(buf)))
+// 			buf, err := ioutil.ReadAll(res.Body)
+// 			assertNoError(t, err)
+// 			assertEqual(t, http.StatusTooManyRequests, res.StatusCode)
+// 			assertEqual(t, errCapacityExceeded, strings.TrimSpace(string(buf)))
 
-		}(i)
-	}
+// 		}(i)
+// 	}
 
-	wg.Wait()
-}
+// 	wg.Wait()
+// }
 
 func TestThrottleRetryAfter(t *testing.T) {
 	r := geen.NewRouter()

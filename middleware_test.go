@@ -23,7 +23,7 @@ var testdataDir string
 
 func init() {
 	_, filename, _, _ := runtime.Caller(0)
-	testdataDir = path.Join(path.Dir(filename), "/../testdata")
+	testdataDir = path.Join(path.Dir(filename), "/__testdata")
 }
 
 func TestWrapWriterHTTP2(t *testing.T) {
