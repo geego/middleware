@@ -1,2 +1,7 @@
-# geen
-a tool for helping develop with golang application. base on bee tools.
+# geen middleware
+
+a high performance, lightweight Go API framework.
+
+## License
+
+[MIT License](./LICENSE)
