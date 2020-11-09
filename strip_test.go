@@ -1,4 +1,4 @@
-package middleware
+package middlewares
 
 import (
 	"net/http"
@@ -11,8 +11,6 @@ import (
 func TestStripSlashes(t *testing.T) {
 	r := geen.NewRouter()
 
-	// This middleware must be mounted at the top level of the router, not at the end-handler
-	// because then it'll be too late and will end up in a 404
 	r.Use(StripSlashes)
 
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {

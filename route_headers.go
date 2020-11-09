@@ -1,4 +1,4 @@
-package middleware
+package middlewares
 
 import (
 	"net/http"
@@ -7,43 +7,7 @@ import (
 
 // RouteHeaders is a neat little header-based router that allows you to direct
 // the flow of a request through a middleware stack based on a request header.
-//
-// For example, lets say you'd like to setup multiple routers depending on the
-// request Host header, you could then do something as so:
-//
-// r := geen.NewRouter()
-// rSubdomain := geen.NewRouter()
-//
-// r.Use(middleware.RouteHeaders().
-//   Route("Host", "example.com", middleware.New(r)).
-//   Route("Host", "*.example.com", middleware.New(rSubdomain)).
-//   Handler)
-//
-// r.Get("/", h)
-// rSubdomain.Get("/", h2)
-//
-//
-// Another example, imagine you want to setup multiple CORS handlers, where for
-// your origin servers you allow authorized requests, but for third-party public
-// requests, authorization is disabled.
-//
-// r := geen.NewRouter()
-//
-// r.Use(middleware.RouteHeaders().
-//   Route("Origin", "https://app.skyweaver.net", cors.Handler(cors.Options{
-// 	   AllowedOrigins:   []string{"https://api.skyweaver.net"},
-// 	   AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-// 	   AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type"},
-// 	   AllowCredentials: true, // <----------<<< allow credentials
-//   })).
-//   Route("Origin", "*", cors.Handler(cors.Options{
-// 	   AllowedOrigins:   []string{"*"},
-// 	   AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-// 	   AllowedHeaders:   []string{"Accept", "Content-Type"},
-// 	   AllowCredentials: false, // <----------<<< do not allow credentials
-//   })).
-//   Handler)
-//
+
 func RouteHeaders() HeaderRouter {
 	return HeaderRouter{}
 }

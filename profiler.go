@@ -1,4 +1,4 @@
-package middleware
+package middlewares
 
 import (
 	"expvar"
@@ -10,14 +10,6 @@ import (
 )
 
 // Profiler is a convenient subrouter used for mounting net/http/pprof. ie.
-//
-//  func MyService() http.Handler {
-//    r := geen.NewRouter()
-//    // ..middlewares
-//    r.Mount("/debug", middleware.Profiler())
-//    // ..routes
-//    return r
-//  }
 func Profiler() http.Handler {
 	r := geen.NewRouter()
 	r.Use(NoCache)

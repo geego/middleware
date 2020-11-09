@@ -1,4 +1,4 @@
-package middleware
+package middlewares
 
 import (
 	"bufio"
@@ -27,17 +27,6 @@ var defaultCompressibleContentTypes = []string{
 	"image/svg+xml",
 }
 
-// Compress is a middleware that compresses response
-// body of a given content types to a data format based
-// on Accept-Encoding request header. It uses a given
-// compression level.
-//
-// NOTE: make sure to set the Content-Type header on your response
-// otherwise this middleware will not compress the response body. For ex, in
-// your handler you should set w.Header().Set("Content-Type", http.DetectContentType(yourBody))
-// or set it manually.
-//
-// Passing a compression level of 5 is sensible value
 func Compress(level int, types ...string) func(next http.Handler) http.Handler {
 	compressor := NewCompressor(level, types...)
 	return compressor.Handler
@@ -69,7 +58,7 @@ func NewCompressor(level int, types ...string) *Compressor {
 	if len(types) > 0 {
 		for _, t := range types {
 			if strings.Contains(strings.TrimSuffix(t, "/*"), "*") {
-				panic(fmt.Sprintf("middleware/compress: Unsupported content-type wildcard pattern '%s'. Only '/*' supported", t))
+				panic(fmt.Sprintf("middlewares/compress: Unsupported content-type wildcard pattern '%s'. Only '/*' supported", t))
 			}
 			if strings.HasSuffix(t, "/*") {
 				allowedWildcards[strings.TrimSuffix(t, "/*")] = struct{}{}
@@ -131,7 +120,7 @@ func NewCompressor(level int, types ...string) *Compressor {
 //
 //  import brotli_enc "gopkg.in/kothar/brotli-go.v0/enc"
 //
-//  compressor := middleware.NewCompressor(5, "text/html")
+//  compressor := middlewares.NewCompressor(5, "text/html")
 //  compressor.SetEncoder("br", func(w http.ResponseWriter, level int) io.Writer {
 //    params := brotli_enc.NewBrotliParams()
 //    params.SetQuality(level)
@@ -181,7 +170,7 @@ func (c *Compressor) SetEncoder(encoding string, fn EncoderFunc) {
 	c.encodingPrecedence = append([]string{encoding}, c.encodingPrecedence...)
 }
 
-// Handler returns a new middleware that will compress the response based on the
+// Handler returns a new middlewares that will compress the response based on the
 // current Compressor.
 func (c *Compressor) Handler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -357,21 +346,21 @@ func (cw *compressResponseWriter) Hijack() (net.Conn, *bufio.ReadWriter, error) 
 	if hj, ok := cw.writer().(http.Hijacker); ok {
 		return hj.Hijack()
 	}
-	return nil, nil, errors.New("middleware: http.Hijacker is unavailable on the writer")
+	return nil, nil, errors.New("middlewares/compress: http.Hijacker is unavailable on the writer")
 }
 
 func (cw *compressResponseWriter) Push(target string, opts *http.PushOptions) error {
 	if ps, ok := cw.writer().(http.Pusher); ok {
 		return ps.Push(target, opts)
 	}
-	return errors.New("middleware: http.Pusher is unavailable on the writer")
+	return errors.New("middlewares/compress: http.Pusher is unavailable on the writer")
 }
 
 func (cw *compressResponseWriter) Close() error {
 	if c, ok := cw.writer().(io.WriteCloser); ok {
 		return c.Close()
 	}
-	return errors.New("middleware: io.WriteCloser is unavailable on the writer")
+	return errors.New("middlewares/compress: io.WriteCloser is unavailable on the writer")
 }
 
 func encoderGzip(w io.Writer, level int) io.Writer {

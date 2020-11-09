@@ -1,4 +1,4 @@
-package middleware
+package middlewares
 
 import (
 	"net/http"
@@ -24,29 +24,21 @@ type ThrottleOpts struct {
 	RetryAfterFn   func(ctxDone bool) time.Duration
 }
 
-// Throttle is a middleware that limits number of currently processed requests
-// at a time across all users. Note: Throttle is not a rate-limiter per user,
-// instead it just puts a ceiling on the number of currentl in-flight requests
-// being processed from the point from where the Throttle middleware is mounted.
 func Throttle(limit int) func(http.Handler) http.Handler {
 	return ThrottleWithOpts(ThrottleOpts{Limit: limit, BacklogTimeout: defaultBacklogTimeout})
 }
 
-// ThrottleBacklog is a middleware that limits number of currently processed
-// requests at a time and provides a backlog for holding a finite number of
-// pending requests.
 func ThrottleBacklog(limit int, backlogLimit int, backlogTimeout time.Duration) func(http.Handler) http.Handler {
 	return ThrottleWithOpts(ThrottleOpts{Limit: limit, BacklogLimit: backlogLimit, BacklogTimeout: backlogTimeout})
 }
 
-// ThrottleWithOpts is a middleware that limits number of currently processed requests using passed ThrottleOpts.
 func ThrottleWithOpts(opts ThrottleOpts) func(http.Handler) http.Handler {
 	if opts.Limit < 1 {
-		panic("middleware: Throttle expects limit > 0")
+		panic("middlewares/throttle: Throttle expects limit > 0")
 	}
 
 	if opts.BacklogLimit < 0 {
-		panic("middleware: Throttle expects backlogLimit to be positive")
+		panic("middlewares/throttle: Throttle expects backlogLimit to be positive")
 	}
 
 	t := throttler{

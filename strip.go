@@ -1,4 +1,4 @@
-package middleware
+package middlewares
 
 import (
 	"fmt"
@@ -7,9 +7,6 @@ import (
 	"github.com/geego/geen"
 )
 
-// StripSlashes is a middleware that will match request paths with a trailing
-// slash, strip it from the path and continue routing through the mux, if a route
-// matches, then it will serve the handler.
 func StripSlashes(next http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		var path string
@@ -27,10 +24,6 @@ func StripSlashes(next http.Handler) http.Handler {
 	return http.HandlerFunc(fn)
 }
 
-// RedirectSlashes is a middleware that will match request paths with a trailing
-// slash and redirect to the same path, less the trailing slash.
-//
-// NOTE: RedirectSlashes middleware is *incompatible* with http.FileServer,
 func RedirectSlashes(next http.Handler) http.Handler {
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		var path string

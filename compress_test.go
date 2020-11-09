@@ -1,4 +1,4 @@
-package middleware
+package middlewares
 
 import (
 	"compress/flate"
@@ -131,12 +131,12 @@ func TestCompressorWildcards(t *testing.T) {
 		{
 			name:    "invalid wildcard #1",
 			types:   []string{"audio/*wav"},
-			recover: "middleware/compress: Unsupported content-type wildcard pattern 'audio/*wav'. Only '/*' supported",
+			recover: "middlewares/compress: Unsupported content-type wildcard pattern 'audio/*wav'. Only '/*' supported",
 		},
 		{
 			name:    "invalid wildcard #2",
 			types:   []string{"application*/*"},
-			recover: "middleware/compress: Unsupported content-type wildcard pattern 'application*/*'. Only '/*' supported",
+			recover: "middlewares/compress: Unsupported content-type wildcard pattern 'application*/*'. Only '/*' supported",
 		},
 		{
 			name:    "valid wildcard",

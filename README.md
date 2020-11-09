@@ -1,4 +1,4 @@
-# middleware
+# middlewares
 
 Here you'll find middleware ready to use with `geen` framework, maintained by geego team.
 
@@ -17,12 +17,12 @@ import (
   "net/http"
 
   "github.com/geego/geen"
-  "github.com/geego/middleware"
+  "github.com/geego/middlewares"
 )
 
 func main() {
   r := geen.NewRouter()
-  r.Use(middleware.Logger)
+  r.Use(middlewares.Logger)
   r.Get("/", func(w http.ResponseWriter, r *http.Request) {
     w.Write([]byte("welcome"))
   })

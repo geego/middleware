@@ -1,7 +1,4 @@
-package middleware
-
-// Ported from Goji's middleware, source:
-// https://github.com/zenazn/goji/tree/master/web/middleware
+package middlewares
 
 import (
 	"fmt"

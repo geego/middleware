@@ -1,4 +1,4 @@
-package middleware
+package middlewares
 
 import "net/http"
 
@@ -19,5 +19,5 @@ type contextKey struct {
 }
 
 func (k *contextKey) String() string {
-	return "middleware context value " + k.name
+	return "middlewares context value " + k.name
 }
